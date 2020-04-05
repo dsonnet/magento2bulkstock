@@ -28,15 +28,15 @@ class ProductUpdateManagement implements ProductApiInterface {
             $error = false;
             foreach ($products as $product) {
                 try {
-                    if (isset($product['sku'])) {
-                        $sku = $product['sku'];
+                    if (isset($product['Id'])) {
+                        $sku = $product['Id'];
                         $productObject = $this->productRepository->get($sku);
                         if (isset($product['price'])) {
                             $price = $product['price'];
                             $productObject->setPrice($price);
                         }
-                        if (isset($product['qty'])) {
-                            $qty = $product['qty'];
+                        if (isset($product['QtDispo'])) {
+                            $qty = $product['QtDispo'];
                             if ($qty > 0) {
                                 $productObject->setStockData(
                                     [
@@ -59,7 +59,7 @@ class ProductUpdateManagement implements ProductApiInterface {
                         }
                     }
                 } catch (\Magento\Framework\Exception\LocalizedException $e) {
-                    $messages[] = $product['sku'].' =>'.$e->getMessage();
+                    $messages[] = $product['Id'].' =>'.$e->getMessage();
                     $error = true;
                 }
             }
