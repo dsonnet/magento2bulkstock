@@ -7,11 +7,12 @@ Custom configuration for module for Akeneo Magento2 connector.
 update `composer.json` add:
 
 ```
-    {
-        "type": "vcs",
-        "url": "https://github.com/Smartoys/AkeneoConnectorFileCollection.git",
-        "branch": "master"
-    }
+        {
+            "type": "vcs",
+            "url": "https://github.com/dsonnet/magento2bulkstock.git",
+            "branch": "master"
+        },
+
 ```
 
 to `repositories` key
@@ -19,7 +20,6 @@ to `repositories` key
 finally should look ~like:
 
 ```
-        "repositories": [
         {
             "type": "composer",
             "url": "https://repo.magento.com/"
@@ -30,16 +30,20 @@ finally should look ~like:
             "branch": "master"
         },
         {
-         "type": "composer", 
-         "url": "https://packagist.org"
+            "type": "vcs",
+            "url": "https://github.com/dsonnet/magento2bulkstock.git",
+            "branch": "master"
         },
-        { "packagist": false }
-    ],
+        {
+            "type": "composer",
+            "url": "https://packagist.org"
+        },
+
 ```
 
 execute 
 
-```composer require "smartoys/pim-connector @dev"```
+```composer require "smartoys/bulk-product-update @dev"```
 
 run
 
