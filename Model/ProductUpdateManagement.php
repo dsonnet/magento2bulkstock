@@ -28,21 +28,35 @@ class ProductUpdateManagement implements ProductApiInterface {
             $error = false;
             foreach ($products as $product) {
                 try {
-                    $sku = $product['sku'];
-                    $productObject = $this->productRepository->get($sku);
-                    $qty = $product['qty'];
-                    $price = $product['price'];
-                    $productObject->setPrice($price);
-                    $productObject->setStockData(
-                        [
-                            'is_in_stock' => 1,
-                            'qty' => $qty
-                        ]
-                    );
-                    try {
-                        $this->productRepository->save($productObject);
-                    } catch (\Exception $e) {
-                        throw new StateException(__('Cannot save product.'));
+                    if (isset($product['sku'])) {
+                        $sku = $product['sku'];
+                        $productObject = $this->productRepository->get($sku);
+                        if (isset($product['price'])) {
+                            $price = $product['price'];
+                            $productObject->setPrice($price);
+                        }
+                        if (isset($product['qty'])) {
+                            $qty = $product['qty'];
+                            if ($qty > 0) {
+                                $productObject->setStockData(
+                                    [
+                                        'is_in_stock' => 1,
+                                        'qty' => $qty
+                                    ]
+                                );
+                            } else {
+                                $productObject->setStockData(
+                                    [
+                                        'is_in_stock' => 0,
+                                        'qty' => 0
+                                    ]);
+                            };
+                        };
+                        try {
+                            $this->productRepository->save($productObject);
+                        } catch (\Exception $e) {
+                            throw new StateException(__('Cannot save product.'));
+                        }
                     }
                 } catch (\Magento\Framework\Exception\LocalizedException $e) {
                     $messages[] = $product['sku'].' =>'.$e->getMessage();
