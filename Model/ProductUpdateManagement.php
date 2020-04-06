@@ -3,18 +3,28 @@ namespace Smartoys\BulkProductUpdate\Model;
 
 use Smartoys\BulkProductUpdate\Api\ProductUpdateManagementInterface as ProductApiInterface;
 use Magento\Framework\Exception\StateException;
+use Magento\InventoryApi\Api\SourceItemsSaveInterface;
+use Magento\InventoryApi\Api\Data\SourceItemInterfaceFactory;
 
 class ProductUpdateManagement implements ProductApiInterface {
+
+    protected $_sourceItemsSaveInterface;
+
+    protected $_sourceItemFactory;
 
     /**
      * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
      */
     public function __construct(
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
+        \Magento\InventoryApi\Api\SourceItemsSaveInterface $sourceItemsSaveInterface,
+        \Magento\InventoryApi\Api\Data\SourceItemInterfaceFactory $sourceItemFactory,
         \Psr\Log\LoggerInterface $logger
     ) {
         $this->productRepository = $productRepository;
         $this->logger = $logger;
+        $this->_sourceItemsSaveInterface = $sourceItemsSaveInterface;
+        $this->_sourceItemFactory = $sourceItemFactory;
     }
 
     /**
@@ -84,7 +94,7 @@ class ProductUpdateManagement implements ProductApiInterface {
 
     public function setQtyToProduct($sku, $qty, $source)
     {
-        $sourceItem = $this->sourceItemFactory->create();
+        $sourceItem = $this->_sourceItemFactory->create();
         $sourceItem->setSourceCode($source);
         $sourceItem->setSku($sku);
         $sourceItem->setQuantity($qty);
@@ -94,7 +104,7 @@ class ProductUpdateManagement implements ProductApiInterface {
             $sourceItem->setStatus(0);
         }
 
-        $this->sourceItemsSave->execute([$sourceItem]);
+        $this->_sourceItemsSaveInterface->execute([$sourceItem]);
     }
     /* log for an API */
     public function writeLog($log)
