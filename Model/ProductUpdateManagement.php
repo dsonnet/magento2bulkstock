@@ -1,5 +1,5 @@
 <?php
-namespace Smartoys\BulkProductUpdate;
+namespace Smartoys\BulkProductUpdate\Model;
 
 use Smartoys\BulkProductUpdate\Api\ProductUpdateManagementInterface as ProductApiInterface;
 
